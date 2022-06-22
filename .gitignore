@@ -6,3 +6,8 @@ build.xml
 /.apt_generated/
 /.apt_generated_tests/
 .DS_Store
+snyk_findings.json
+.vscode/settings.json
+.scannerwork/report-task.txt
+.scannerwork/.sonar_lock
+.dccache
