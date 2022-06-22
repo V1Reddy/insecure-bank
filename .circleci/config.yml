@@ -19,13 +19,13 @@ jobs:
       # Checkout the code as the first step.
       - checkout
       # Use mvn clean and package as the standard maven build phase
-      #- run:
-      #    name: Build
-      #    command: mvn -B -DskipTests clean package
+      - run:
+          name: Build
+          command: mvn -B -DskipTests clean package
       # Analyze the code on SonarCloud!
       - run:
           name: Analyze on SonarCloud
-          command: mvn sonar:sonar -Dsonar.projectKey=V1Reddy_insecure-bank
+          command: mvn sonar:sonar
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
@@ -33,4 +33,5 @@ workflows:
   sample: # This is the name of the workflow, feel free to change it to better match your workflow.
     # Inside the workflow, you define the jobs you want to run.
     jobs:
-      - build-and-analyze
+      - build-and-analyze:
+          context: SonarCloud
