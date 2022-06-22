@@ -34,6 +34,9 @@
 		<maven.repository.url>${maven.repository.protocol}://repository.jboss.org/nexus/content/groups/public/</maven.repository.url>
 		<!-- https://access.redhat.com/maven-repository -->
 		<maven.redhat.repository.url>${maven.repository.protocol}://maven.repository.redhat.com/ga/</maven.redhat.repository.url>
+		<!-- Sonar Cloud config -->
+		<sonar.organization>v1reddy</sonar.organization>
+		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 	</properties>
 
     <repositories>
