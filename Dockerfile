@@ -5,6 +5,6 @@ ENV WILDFLY /opt/jboss/wildfly
 
 ADD target/insecure-bank.war /opt/jboss/wildfly/standalone/deployments/
 
-EXPOSE 8080
+EXPOSE 8081
 
 CMD ["/opt/jboss/wildfly/bin/standalone.sh", "-b", "0.0.0.0"]
