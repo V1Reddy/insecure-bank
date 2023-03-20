@@ -6,7 +6,7 @@ pipeline {
 
     environment {
         application_name = 'App1'
-        application._type = 'AppType1'
+        application_type = 'AppType1'
         artifact_name = 'Artifact1'
         dev_project = 'DEV_1'
         dev_stage = 'STAGE_1'
@@ -22,15 +22,15 @@ pipeline {
                 echo "In the fortify merge"
                                 
                 // Version of the DEV project
-                def dev_ProjectVersion = "${map.id}-${application.type}-${application.name}_${dev.stage}"
+                dev_projectVersion = "${map.id}-${application.type}-${application.name}_${dev.stage}"
 
                 //Version of the UAT (latest/release) project
-                def latest_ProjectVersion = "${map.id}-${application.type}-${application.name}_${latest.stage}"
+                latest_projectVersion = "${map.id}-${application.type}-${application.name}_${latest.stage}"
 
                 // Set location for the UAT (latest/release) FPR
-                def latest_FPR = "${env.WORKSPACE}/${latest_ProjectVersion}.fpr"
+                latest_fpr = "${env.WORKSPACE}/${latest_projectVersion}.fpr"
 
-                echo "latest_FPR -> ${latest_FPR}"
+                echo "latest_fpr -> ${latest_fpr}"
 
                 // Download FPR from DEV project and re-name it to Latest FPR
                 echo 'In the download FPR block...'
@@ -39,7 +39,7 @@ pipeline {
                 echo "### Starting DEV FPR upload to UAT (latest) Project ###"
 
                 // Delete temporary merged FPR from the workspace
-                sh rm "${latest_FPR}"
+                sh rm "${latest_fpr}"
             }
         }
     } 
