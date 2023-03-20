@@ -6,15 +6,15 @@ pipeline {
     stages {
         stage ('Fortify merge') {
             environment {
-                application.name = 'App1'
-                application.type = 'AppType1'
-                artifact.name = 'Artifact1'
-                dev.project = 'DEV_1'
-                dev.stage = 'STAGE_1'
-                latest.project = 'Proj1'
-                latest.stage = 'latest'
-                map.id = '111'
-                project.folder = 'some_folder' 
+                application_name = 'App1'
+                application._type = 'AppType1'
+                artifact_name = 'Artifact1'
+                dev_project = 'DEV_1'
+                dev_stage = 'STAGE_1'
+                latest_project = 'Proj1'
+                latest_stage = 'latest'
+                map_id = '111'
+                project_folder = 'some_folder' 
             }
             steps {
                 echo "In the fortify merge"
