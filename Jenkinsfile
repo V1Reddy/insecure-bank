@@ -1,7 +1,10 @@
 pipeline {
     agent any
     parameters {
-        base64File 'FORTIFY_FPR'
+        string(name: 'APP_NAME', defaultValue: 'App 1', description: 'Name of the application used for scanning')
+        choice(name: 'APP_TYPE', choices: ['WEB', 'API', 'MS', 'BE'], description: 'Type of the application that was scanned')
+        string(name: 'ARTIFACT_NAME', defaultValue: 'Artifact 1', description: 'Source alias of the artifact used for scanning. This value can be left empty if a CI pipeline is being used.')
+        password(name: 'PASSWORD', defaultValue: 'SECRET', description: 'Enter a password')
     }
 
     environment {
@@ -40,7 +43,7 @@ pipeline {
                 echo "### Starting DEV FPR upload to UAT (latest) Project ###"
 
                 // Delete temporary merged FPR from the workspace
-                sh rm "${latest_fpr}"
+                // sh rm "${latest_fpr}"
             }
         }
     } 
