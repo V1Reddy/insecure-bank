@@ -3,22 +3,15 @@ def latest_fpr = ''
 pipeline {
     agent any
     parameters {
-        string(name: 'APP_NAME', defaultValue: 'App 1', description: 'Name of the application used for scanning')
-        choice(name: 'APP_TYPE', choices: ['WEB', 'API', 'MS', 'BE'], description: 'Type of the application that was scanned')
-        string(name: 'ARTIFACT_NAME', defaultValue: 'Artifact 1', description: 'Source alias of the artifact used for scanning. This value can be left empty if a CI pipeline is being used.')
-        password(name: 'PASSWORD', defaultValue: 'SECRET', description: 'Enter a password')
-    }
-
-    environment {
-        application_name = 'App1'
-        application_type = 'AppType1'
-        artifact_name = 'Artifact1'
-        dev_project = 'DEV_1'
-        dev_stage = 'STAGE_1'
-        latest_project = 'Proj1'
-        latest_stage = 'latest'
-        map_id = '111'
-        project_folder = 'some_folder' 
+        string(name: 'APPLICATION_NAME', defaultValue: '', description: 'Name of the application used for scanning.')
+        choice(name: 'APPLICATION_TYPE', choices: ['WEB', 'API', 'MS', 'BE'], description: 'Type of the application that was scanned.')
+        string(name: 'ARTIFACT_NAME', defaultValue: '', description: 'Source alias of the artifact used for scanning. \
+        This value can be left empty if a CI pipeline is being used.')
+        string(name: 'DEV_PROJECT_NAME', defaultValue: '', description: 'Name of the DEV project as shown on Fortify.')
+        string(name: 'DEV_STAGE', defaultValue: '', description: 'Name of the development stage')
+        string(name: 'LATEST_PROJECT_NAME', defaultValue: '', description: 'Name of the UAT (latest) project as shown on Fortify.')
+        string(name: 'LATEST_STAGE', defaultValue: '', description: 'Name of the UAT (latest) stage')
+        string(name: 'MAP_ID', defaultValue: '', description: 'MAP ID of the application')
     }
 
     stages {
@@ -28,10 +21,10 @@ pipeline {
 
                 script {                                
                     // Version of the DEV project
-                    def dev_projectVersion = "${map_id}-${application_type}-${application_name}_${dev_stage}"
+                    def dev_projectVersion = "${params.MAP_ID}-${params.APPLICATION_TYPE}-${params.APPLICATION_NAME}_${params.DEV_STAGE}"
 
                     //Version of the UAT (latest/release) project
-                    def latest_projectVersion = "${map_id}-${application_type}-${application_name}_${latest_stage}"
+                    def latest_projectVersion = "${params.MAP_ID}-${params.PPLICATION_TYPE}-${params.APPLICATION_NAME}_${params.LATEST_STAGE}"
 
                     // Set location for the UAT (latest/release) FPR
                     latest_fpr = "${env.WORKSPACE}/${latest_projectVersion}.fpr"
@@ -45,7 +38,7 @@ pipeline {
                 echo "### Starting DEV FPR upload to UAT (latest) Project ###"
 
                 // Delete temporary merged FPR from the workspace
-                // sh rm "${latest_fpr}"
+                sh "rm '${latest_fpr}' "
             }
         }
     } 
