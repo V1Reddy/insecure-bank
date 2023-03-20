@@ -20,16 +20,17 @@ pipeline {
         stage ('Fortify merge') {
             steps {
                 echo "In the fortify merge"
-                                
-                // Version of the DEV project
-                dev_projectVersion = "${map.id}-${application.type}-${application.name}_${dev.stage}"
 
-                //Version of the UAT (latest/release) project
-                latest_projectVersion = "${map.id}-${application.type}-${application.name}_${latest.stage}"
+                script {                                
+                    // Version of the DEV project
+                    def dev_projectVersion = "${map_id}-${application_type}-${application_name}_${dev_stage}"
 
-                // Set location for the UAT (latest/release) FPR
-                latest_fpr = "${env.WORKSPACE}/${latest_projectVersion}.fpr"
+                    //Version of the UAT (latest/release) project
+                    def latest_projectVersion = "${map_id}-${application_type}-${application_name}_${latest_stage}"
 
+                    // Set location for the UAT (latest/release) FPR
+                    def latest_fpr = "${env.WORKSPACE}/${latest_projectVersion}.fpr"
+                }
                 echo "latest_fpr -> ${latest_fpr}"
 
                 // Download FPR from DEV project and re-name it to Latest FPR
