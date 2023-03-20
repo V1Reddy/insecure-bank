@@ -1,3 +1,5 @@
+def latest_fpr = ''
+
 pipeline {
     agent any
     parameters {
@@ -32,7 +34,7 @@ pipeline {
                     def latest_projectVersion = "${map_id}-${application_type}-${application_name}_${latest_stage}"
 
                     // Set location for the UAT (latest/release) FPR
-                    def latest_fpr = "${env.WORKSPACE}/${latest_projectVersion}.fpr"
+                    latest_fpr = "${env.WORKSPACE}/${latest_projectVersion}.fpr"
                 }
                 echo "latest_fpr -> ${latest_fpr}"
 
