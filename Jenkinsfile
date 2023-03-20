@@ -3,19 +3,21 @@ pipeline {
     parameters {
         base64File 'FORTIFY_FPR'
     }
+
+    environment {
+        application_name = 'App1'
+        application._type = 'AppType1'
+        artifact_name = 'Artifact1'
+        dev_project = 'DEV_1'
+        dev_stage = 'STAGE_1'
+        latest_project = 'Proj1'
+        latest_stage = 'latest'
+        map_id = '111'
+        project_folder = 'some_folder' 
+    }
+
     stages {
         stage ('Fortify merge') {
-            environment {
-                application_name = 'App1'
-                application._type = 'AppType1'
-                artifact_name = 'Artifact1'
-                dev_project = 'DEV_1'
-                dev_stage = 'STAGE_1'
-                latest_project = 'Proj1'
-                latest_stage = 'latest'
-                map_id = '111'
-                project_folder = 'some_folder' 
-            }
             steps {
                 echo "In the fortify merge"
                                 
