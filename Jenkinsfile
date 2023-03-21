@@ -3,10 +3,9 @@ def latest_fpr = ''
 pipeline {
     agent any
     parameters {
-        string(name: 'APPLICATION_NAME', defaultValue: '', description: 'Name of the application used for scanning.')
+        string name: 'APPLICATION_NAME', defaultValue: '', description: 'Name of the application used for scanning.', trim: true
         choice(name: 'APPLICATION_TYPE', choices: ['WEB', 'API', 'MS', 'BE'], description: 'Type of the application that was scanned.')
-        string(name: 'ARTIFACT_NAME', defaultValue: '', description: 'Source alias of the artifact used for scanning. \
-        This value can be left empty if a CI pipeline is being used.')
+        string(name: 'ARTIFACT_NAME', defaultValue: '', description: 'Source alias of the artifact used for scanning. This value can be left empty if a CI pipeline is being used.')
         string(name: 'DEV_PROJECT_NAME', defaultValue: '', description: 'Name of the DEV project as shown on Fortify.')
         string(name: 'DEV_STAGE', defaultValue: '', description: 'Name of the development stage')
         string(name: 'LATEST_PROJECT_NAME', defaultValue: '', description: 'Name of the UAT (latest) project as shown on Fortify.')
