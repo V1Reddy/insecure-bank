@@ -8,22 +8,23 @@ do
     case "${opt}" in
         u) url=${OPTARG};;
         t) authtoken=${OPTARG};;
-        d) downloadFPR=${OPTARG};;
         f) file=${OPTARG};;
         a) application=${OPTARG};;
         v) applicationVersion=${OPTARG};;
-        y) downloadFPR='true'
+        d) downloadFPR='true'
             echo "downloadFPR" ;;
         z) uploadFPR='true'
             echo "uploadFPR" ;;
-        ?) echo "script usage: $(basename \$0) [-y] [-z] [-a somevalue]" >&2
+        ?) echo "script usage: $(basename \$0) [-d] [-z] [-a somevalue]" >&2
             exit 1 ;;
     esac
 done
 
 echo "url: $url";
-echo "authtoken: $authtoken";
+echo "application: $application";
+echo "application version: $applicationVersion";
 echo "Download FPR: $downloadFPR";
+echo "Upload FPR: $uploadFPR";
 echo "file: $file";
 
 if [ "$downloadFPR" = "true" ]; then
