@@ -39,7 +39,7 @@ pipeline {
                 // Download FPR from DEV project and re-name it to Latest FPR
                 withCredentials([string(credentialsId: 'FORTIFY_DOWNLOAD_TOKEN', variable: 'FORTIFY_DOWNLOAD_TOKEN')]) {
                     sh '''
-                        fortifyclient -url ${FORTIFY_URL} -authtoken ${FORTIFY_DOWNLOAD_TOKEN} downloadFPR -file ${latest_FPR} 
+                        ./fortifyclient.sh -url ${FORTIFY_URL} -authtoken ${FORTIFY_DOWNLOAD_TOKEN} downloadFPR -file ${latest_FPR} 
                         -application ${DEV_PROJECT_NAME} -applicationVersion ${dev_ProjectVersion}
 
                     '''
@@ -49,7 +49,7 @@ pipeline {
                 echo "### Starting DEV FPR upload to UAT (latest) Project ###"
                 withCredentials([string(credentialsId: 'FORTIFY_UPLOAD_TOKEN', variable: 'FORTIFY_UPLOAD_TOKEN')]) {
                     sh '''
-                        fortifyclient -url ${FORTIFY_URL} -authtoken ${FORTIFY_UPLOAD_TOKEN} uploadFPR -file ${latest_FPR} 
+                        ./fortifyclient.sh -url ${FORTIFY_URL} -authtoken ${FORTIFY_UPLOAD_TOKEN} uploadFPR -file ${latest_FPR} 
                         -application ${LATEST_PROJECT_NAME} -applicationVersion ${latest_ProjectVersion}
 
                     '''
