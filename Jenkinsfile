@@ -35,7 +35,7 @@ pipeline {
                     dest_projectVersion = "${params.MAP_ID}-${params.APPLICATION_TYPE}-${params.APPLICATION_NAME}_${params.DEST_STAGE}"
 
                     // Latest FPR file name
-                    latest_fpr = "${env.WORKSPACE}/${latest_projectVersion}.fpr"
+                    latest_fpr = "${env.WORKSPACE}/${dest_projectVersion}.fpr"
                 }
                 echo "Latest fpr to be downloaded from Fortify SSC -> ${latest_fpr}"
                 echo "FORTIFY SSC URL -> ${FORTIFY_URL}"
