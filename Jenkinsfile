@@ -1,6 +1,6 @@
 def latest_fpr = ''
-def dev_projectVersion = ''
-def latest_projectVersion = ''
+def source_projectVersion = ''
+def dest_projectVersion = ''
 
 pipeline {
     agent {  
@@ -11,14 +11,11 @@ pipeline {
     parameters {
         string (name: 'APPLICATION_NAME', defaultValue: '', description: 'Name of the application used for scanning.', trim: true)
         choice (name: 'APPLICATION_TYPE', choices: ['WEB', 'API', 'MS', 'BE'], description: 'Type of the application that was scanned.')
-        string (name: 'ARTIFACT_NAME', defaultValue: '', 
-            description: 'Source alias of the artifact used for scanning. This value can be left empty if a CI pipeline is being used.',
-            trim: true)
-        string (name: 'DEV_PROJECT_NAME', defaultValue: '', description: 'Name of the DEV project as shown on Fortify.', trim: true)
-        string (name: 'DEV_STAGE', defaultValue: '', description: 'Name of the development stage', trim: true)
-        string (name: 'LATEST_PROJECT_NAME', defaultValue: '', description: 'Name of the UAT (latest) project as shown on Fortify.', trim: true)
-        string (name: 'LATEST_STAGE', defaultValue: '', description: 'Name of the UAT (latest) stage', trim: true)
-        string (name: 'MAP_ID', defaultValue: '', description: 'MAP ID of the application', trim: true)
+        string (name: 'SOURCE_PROJECT_NAME', defaultValue: '', description: 'Name of the source project (as shown in Fortify SSC) from where the FPR file is downloaded.', trim: true)
+        string (name: 'SOURCE_STAGE', defaultValue: '', description: 'Name of the source project stage (as shown in Fortify SSC) from where the FPR file is downloaded.', trim: true)
+        string (name: 'DEST_PROJECT_NAME', defaultValue: '', description: 'Name of the destination project (as shown in Fortify SSC) where the FPR file is uploaded to.', trim: true)
+        string (name: 'DEST_STAGE', defaultValue: '', description: 'Name of the destination stage (as shown in Fortify SSC) where the FPR file is uploaded to.', trim: true)
+        string (name: 'MAP_ID', defaultValue: '', description: 'MAP ID of the application.', trim: true)
     }
 
     stages {
@@ -28,42 +25,42 @@ pipeline {
                 FORTIFY_PATH = "${env.FORTIFY_PATH}"
             }
             steps {
-                echo "In the fortify merge"
+                echo "In the fortify merge."
 
                 script {                                
-                    // Version of the DEV project
-                    dev_projectVersion = "${params.MAP_ID}-${params.APPLICATION_TYPE}-${params.APPLICATION_NAME}_${params.DEV_STAGE}"
+                    // Version of the source project
+                    source_projectVersion = "${params.MAP_ID}-${params.APPLICATION_TYPE}-${params.APPLICATION_NAME}_${params.SOURCE_STAGE}"
 
-                    // Version of the UAT (latest/release) project
-                    latest_projectVersion = "${params.MAP_ID}-${params.APPLICATION_TYPE}-${params.APPLICATION_NAME}_${params.LATEST_STAGE}"
+                    // Version of the destination project
+                    dest_projectVersion = "${params.MAP_ID}-${params.APPLICATION_TYPE}-${params.APPLICATION_NAME}_${params.DEST_STAGE}"
 
-                    // UAT (latest/release) FPR file
+                    // Latest FPR file name
                     latest_fpr = "${env.WORKSPACE}/${latest_projectVersion}.fpr"
                 }
                 echo "Latest fpr to be downloaded from Fortify SSC -> ${latest_fpr}"
                 echo "FORTIFY SSC URL -> ${FORTIFY_URL}"
 
-                // Download FPR from DEV project and re-name it to Latest FPR
-                echo "### Starting DEV FPR download from Fortify SSC URL ###"
+                // Download FPR from Source project and re-name it to latest FPR
+                echo "### Starting FPR download from Source from Fortify SSC URL ###"
                 withCredentials([string(credentialsId: 'FORTIFY_DOWNLOAD_TOKEN', variable: 'FORTIFY_DOWNLOAD_TOKEN')]) {
                     sh '''
-                        ${FORTIFY_PATH}/fortifyclient -url ${FORTIFY_URL} -authtoken ${FORTIFY_DOWNLOAD_TOKEN} downloadFPR -file ${latest_FPR} 
-                        -application ${DEV_PROJECT_NAME} -applicationVersion ${dev_ProjectVersion}
+                        ${FORTIFY_PATH}/fortifyclient -url ${FORTIFY_URL} -authtoken ${FORTIFY_DOWNLOAD_TOKEN} downloadFPR -file ${latest_fpr} 
+                        -application ${SOURCE_PROJECT_NAME} -applicationVersion ${source_ProjectVersion}
                     '''
                 }
 
-                // Upload DEV FPR to UAT latest Project
-                echo "### Starting DEV FPR upload to UAT (latest) Project ###"
+                // Upload downloaded FPR to the Destination Project
+                echo "### Starting FPR upload to Destination Project ###"
                 withCredentials([string(credentialsId: 'FORTIFY_UPLOAD_TOKEN', variable: 'FORTIFY_UPLOAD_TOKEN')]) {
                     sh '''
-                        ${FORTIFY_PATH}/fortifyclient -url ${FORTIFY_URL} -authtoken ${FORTIFY_UPLOAD_TOKEN} uploadFPR -file ${latest_FPR} 
-                        -application ${LATEST_PROJECT_NAME} -applicationVersion ${latest_ProjectVersion}
+                        ${FORTIFY_PATH}/fortifyclient -url ${FORTIFY_URL} -authtoken ${FORTIFY_UPLOAD_TOKEN} uploadFPR -file ${latest_fpr} 
+                        -application ${DEST_PROJECT_NAME} -applicationVersion ${dest_ProjectVersion}
                     '''
                 }
-                echo "FPR upload to Foritfy SSC is complete."
+                echo "FPR upload to Fortify SSC is complete."
 
                 // Delete temporary downloaded FPR from the workspace
-                sh " rm ${latest_FPR} "
+                sh " rm ${latest_fpr} "
             }
         }
     } 
