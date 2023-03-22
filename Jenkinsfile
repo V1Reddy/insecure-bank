@@ -5,7 +5,7 @@ def latest_projectVersion = ''
 pipeline {
     agent {  
         node {  
-            label 'dummy'  
+            label 'fortify'  
         }  
     } 
     parameters {
